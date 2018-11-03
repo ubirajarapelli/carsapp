@@ -12,7 +12,7 @@ const reactLifecycles = singleSpaReact({
     React,
     ReactDOM,
     rootComponent,
-    domElementGetter: () => document.getElementById('tray-app')
+    domElementGetter: () => document.getElementById('cars-app')
 });
 
 export const bootstrap = [
