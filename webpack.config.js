@@ -4,12 +4,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
-
 module.exports={
   devServer: {
     contentBase: path.join(__dirname, "dist"),
     compress: true,
-    port: 3001,
+    port: 3002,
     historyApiFallback: true,
     headers: {
         "Access-Control-Allow-Origin": "*",
@@ -35,28 +34,25 @@ module.exports={
       chunkFilename:'[id][hash].js',
       publicPath:'/',
       crossOriginLoading: false,
-      library: 'trayApp',
+      library: 'carsApp',
       libraryTarget: 'window'
     },
     module: {
         rules: [
-
           {
             test: /\.(js|jsx)$/,
             exclude: /(node_modules|bower_components)/,
-          use:['babel-loader']
-
+            use:['babel-loader']
           },
           {
             test:/\.css$/, use:[
-            { loader: MiniCssExtractPlugin.loader}
-              ,{loader:"css-loader",
-
-              options:{
-                minimize:true,
-                sourceMap:true
+              {loader: MiniCssExtractPlugin.loader},
+              {loader:"css-loader",
+                options:{
+                  minimize:true,
+                  sourceMap:true
+                }
               }
-            }
             ]
           },
           {
@@ -82,18 +78,21 @@ module.exports={
             ]
           }
         ]
-      },
-    plugins: [new HtmlWebpackPlugin({
+    },
+
+    plugins: [
+      new HtmlWebpackPlugin({
         template:__dirname+'/public/index.html',
         inject:'body',
         filename:'index.html'
-    }),
-    new MiniCssExtractPlugin({
-      filename: "[name]-[hash].css",
-      chunkFilename: "[id][hash].css"
-    }),
-    new UglifyJsPlugin({ sourceMap: true }),
-
-],
+      }),
+      new MiniCssExtractPlugin({
+        filename: "[name]-[hash].css",
+        chunkFilename: "[id][hash].css"
+      }),
+      new UglifyJsPlugin({ 
+        sourceMap: true 
+      }),
+    ],
     mode: 'production'
 }
