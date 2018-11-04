@@ -2,7 +2,8 @@ const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const prefixer = require('postcss-prefix-selector');
 
 module.exports={
   devServer: {
@@ -45,12 +46,24 @@ module.exports={
             use:['babel-loader']
           },
           {
-            test:/\.css$/, use:[
-              {loader: MiniCssExtractPlugin.loader},
-              {loader:"css-loader",
+            test:/\.css$/, 
+            loaders:[
+              { loader: MiniCssExtractPlugin.loader },
+              { loader:"css-loader",
                 options:{
                   minimize:true,
                   sourceMap:true
+                }
+              },
+              {
+                loader: require.resolve('postcss-loader'),
+                options: {
+                  ident: 'postcss',
+                  plugins: () => [
+                    prefixer({
+                      prefix: '#cars-app'
+                    })
+                  ]
                 }
               }
             ]
@@ -87,12 +100,12 @@ module.exports={
         filename:'index.html'
       }),
       new MiniCssExtractPlugin({
-        filename: "[name]-[hash].css",
+        filename: "[name].css",
         chunkFilename: "[id][hash].css"
       }),
       new UglifyJsPlugin({ 
         sourceMap: true 
-      }),
+      })
     ],
     mode: 'production'
 }
