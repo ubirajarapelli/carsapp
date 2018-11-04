@@ -14,7 +14,6 @@ class App extends Component {
             isLoading: false,
             error: null,
         }
-
     }
 
     componentDidCatch() {
@@ -34,12 +33,9 @@ class App extends Component {
             error,
             isLoading: false
         }))
-        
     }
 
-    componentWillMount() {
-        
-    }
+    componentWillMount() {}
 
 
     render(){
@@ -79,6 +75,7 @@ class App extends Component {
                     {list.marca}
                     {list.favorito}
                     {renderItens()}
+                    <button>Reservar</button>
                 </article>
             ))
         }
