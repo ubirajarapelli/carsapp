@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import './App.css';
+import SearchEngine from './SearchEngine';
 
 const API ='https://demo8346836.mockable.io/cars';
 
@@ -90,7 +91,8 @@ class App extends Component {
 
         return (
             <section>
-                {renderCars()}
+              <SearchEngine/>
+              {renderCars()}
             </section>
         );
     }
