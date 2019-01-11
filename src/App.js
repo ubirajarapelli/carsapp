@@ -1,16 +1,26 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-
+import Axios from 'axios';
+import { ApiKey } from '../apiKey';
 import './App.css';
 import SearchEngine from './SearchEngine';
 
-const API ='https://demo8346836.mockable.io/cars';
+const API = `https://api.sandbox.amadeus.com/v1.2/cars/search-airport?apikey=${ApiKey}`;
 
 class App extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            location,
+            pick_up,
+            drop_off,
+            lang,
+            currency,
+            provider,
+            rate_class,
+            rate_plan,
+            rate_filter,
+            vehicle,
             payload: [],
             isLoading: false,
             error: null,
@@ -21,22 +31,31 @@ class App extends Component {
         console.log('componentDidCatch');
     }
 
-    componentDidMount() {
-
-        this.setState({isLoading: true});
-
-        axios.get(API)
-        .then(response => this.setState({
-            payload: response.data,
-            isLoading: false
-        }))
-        .catch(error => this.setState({
-            error,
-            isLoading: false
-        }))
-    }
-
+    componentDidMount() { }
+    
     componentWillMount() {}
+    
+    handleSearch() {
+        this.setState({isLoading: true});
+        
+        const location = this.state.location;
+        const pickUp = this.state.pick_up;
+        const dropOff = this.state.drop_off;
+        const lang = this.state.lang;
+        const currency = this.state.currency;
+        const provider = this.state.provider;
+        const rateClass = this.state.rate_class;
+        const ratePlan = this.state.rate_plan;
+        const rateFilter = this.state.rate_filter;
+        const vehicle = this.state.vehicle;
+
+        Axios.get(`${API}&location=${location}&pick_up=${pickUp}&drop_off=${dropOff}`)
+            .then(response => this.setState({
+                    flights: response.data,
+                    isLoading: false,
+                })
+            )  
+    }
 
 
     render(){
