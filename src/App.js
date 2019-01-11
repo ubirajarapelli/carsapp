@@ -3,41 +3,45 @@ import Axios from 'axios';
 import { ApiKey } from '../apiKey';
 import './App.css';
 import SearchEngine from './SearchEngine';
+import ListCars from './ListCars';
 
 const API = `https://api.sandbox.amadeus.com/v1.2/cars/search-airport?apikey=${ApiKey}`;
 
 class App extends Component {
     constructor(props) {
-        super(props);
+      super(props);
 
-        this.state = {
-            location,
-            pick_up,
-            drop_off,
-            lang,
-            currency,
-            provider,
-            rate_class,
-            rate_plan,
-            rate_filter,
-            vehicle,
-            payload: [],
-            isLoading: false,
-            error: null,
-        }
+      this.state = {
+        location: '',
+        pick_up: '',
+        drop_off: '',
+        lang: '',
+        currency: '',
+        provider: '',
+        rate_class: '',
+        rate_plan: '',
+        rate_filter: '',
+        vehicle: '',
+        cars: [],
+        isLoading: false,
+        error: null,
+      }
+
+      this.handleChange = this.handleChange.bind(this)
+      this.handleSearch = this.handleSearch.bind(this)
     }
 
-    componentDidCatch() {
-        console.log('componentDidCatch');
-    }
-
-    componentDidMount() { }
-    
+    componentDidCatch() {}
+    componentDidMount() {}
     componentWillMount() {}
-    
+
+    handleChange(event) {
+      this.setState({[event.target.name]: event.target.value})
+  }
+
     handleSearch() {
         this.setState({isLoading: true});
-        
+
         const location = this.state.location;
         const pickUp = this.state.pick_up;
         const dropOff = this.state.drop_off;
@@ -51,54 +55,14 @@ class App extends Component {
 
         Axios.get(`${API}&location=${location}&pick_up=${pickUp}&drop_off=${dropOff}`)
             .then(response => this.setState({
-                    flights: response.data,
+                    cars: response.data,
                     isLoading: false,
                 })
-            )  
+            )
     }
 
-
     render(){
-        const { payload, isLoading, error } = this.state;
-
-        const renderItens = () => {
-            const itensList = payload || [];
-            return itensList.map(item => (
-                <div>
-                    {item.portas}
-                    {item.passageiros}
-                    {item.portaMalas}
-                    {item.arCondicionado}
-                    {item.transmissao}
-                    {item.direcao}
-                    {item.vidroEletrico}
-                    {item.multimedia}
-                    {item.radio}
-                </div>
-            ))
-        }
-
-        const renderCars = () => {
-            const carsList = payload || [];
-
-            return carsList.map(list => (
-                <article className="product">
-                    {list.titulo}
-                    {list.codigoTaxa}
-                    {list.urlImagem}
-                    {list.detalhes}
-                    {list.marcas}
-                    {list.valorTotal}
-                    {list.porcentagemDesconto}
-                    {list.porcentagemDesconto}
-                    {list.qtdParcelas}
-                    {list.marca}
-                    {list.favorito}
-                    {renderItens()}
-                    <button>Reservar</button>
-                </article>
-            ))
-        }
+        const { cars, isLoading, error } = this.state;
 
         if (error) {
             return <div>{error.message}</div>;
@@ -110,8 +74,16 @@ class App extends Component {
 
         return (
             <section>
-              <SearchEngine/>
-              {renderCars()}
+              <SearchEngine
+                location={this.state.location}
+                pickUp={this.state.pick_up}
+                dropOff={this.state.drop_off}
+
+                handleChange={this.handleChange}
+                handleSearch={this.handleSearch}/>
+
+              <ListCars
+                cars={this.state.cars} />
             </section>
         );
     }
